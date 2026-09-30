@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "250116583629",
+    "project_id": "belwork-83353",
+    "storage_bucket": "belwork-83353.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250116583629:android:4432a16b31c55b341e3984",
+        "android_client_info": {
+          "package_name": "com.topackubilayapp.belworkapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250116583629-4pdelhhpelo0tqesk05uc8d2g8a8kn1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF1w63nSbN0W49RVEDoyodcpVNhL5p29E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250116583629-4pdelhhpelo0tqesk05uc8d2g8a8kn1e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "250116583629-dl5rk1ekv5e66ajb9mbtfiag2rpt5cp5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.topackubilayapp.belworkapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
