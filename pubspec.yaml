@@ -1,0 +1,126 @@
+name: belwork
+description: "A new Flutter project."
+
+publish_to: "none"
+
+version: 1.0.2+10
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  sign_in_with_apple: ^6.1.4
+
+  # main state management use
+  flutter_riverpod: ^3.4.1
+  # route related
+  go_router: ^17.3.0
+  # payment related
+  app_links: ^7.2.1
+  url_launcher: ^6.3.1
+  webview_flutter: ^4.10.0
+  # storage
+  shared_preferences: ^2.5.5
+  # #1 Secure token storage (Android Keystore / iOS Keychain)
+  flutter_secure_storage: ^10.3.1
+  # environment secure variable
+  flutter_dotenv: ^6.0.1
+
+  # api services
+  dio: ^5.11.0
+  http_parser: ^4.1.2
+  mime: ^2.0.0
+  pretty_dio_logger: ^1.4.0
+  socket_io_client: ^3.1.6
+  connectivity_plus: ^7.3.1
+  web_socket_channel: ^3.0.3
+
+  # map related (Leaflet OpenStreetMap)
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+
+  # translator
+  translator: ^1.0.4+1
+  html: ^0.15.6
+
+  # image related
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.2
+  image_picker: ^1.2.3
+
+  # ui related
+  permission_handler: ^12.0.3
+  readmore: ^3.0.0
+  skeletonizer: ^2.1.3
+  flutter_widget_from_html_core: ^0.17.0
+  cupertino_icons: ^1.0.9
+  firebase_core: ^4.13.0
+  firebase_messaging: ^16.5.0
+  google_sign_in: ^6.2.2
+  firebase_auth: ^6.5.7
+
+  # notification related
+  # flutter_local_notifications: ^22.2.0
+  # firebase_messaging: ^16.4.3
+  # firebase_core: ^4.12.1
+  # device_info_plus: ^13.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  change_app_package_name:
+    ^1.5.0 # dart run change_app_package_name:main com.topackubilayapp.belworkapp
+    #  if need only android --android
+    #  if need only iod --ios
+
+flutter:
+  uses-material-design: true
+
+  # local all assets
+  assets:
+    - assets/fonts/
+    - assets/images/
+    - assets/icons/
+    #- .env # environment file add asset
+
+  # local all font
+  fonts:
+    - family: NunitoSans
+      fonts:
+        - asset: assets/fonts/NunitoSans-Light.ttf
+          weight: 300
+
+        - asset: assets/fonts/NunitoSans-Regular.ttf
+          weight: 400
+
+        - asset: assets/fonts/NunitoSans-SemiBold.ttf
+          weight: 600
+
+        - asset: assets/fonts/NunitoSans-Bold.ttf
+          weight: 700
+
+        - asset: assets/fonts/NunitoSans-ExtraBold.ttf
+          weight: 800
+
+        - asset: assets/fonts/NunitoSans-Black.ttf
+          weight: 900
+
+        - asset: assets/fonts/NunitoSans-Italic.ttf
+          style: italic
+
+        - asset: assets/fonts/NunitoSans-BoldItalic.ttf
+          weight: 700
+          style: italic
+
+    - family: Calibri
+      fonts:
+        - asset: assets/fonts/calibri-bold.ttf
+          weight: 600
+        - asset: assets/fonts/calibri-regular.ttf
+          weight: 400

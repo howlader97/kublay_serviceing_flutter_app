@@ -1,0 +1,26 @@
+java : 17.0.16 2025-07-15
+===============================================
+Mac/Linux: keytool -genkey -v -keystore key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
+key make command (windows): keytool -genkeypair -v -keystore key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
+===============================================
+
+===============================================
+Command to get SHA1 key: keytool -list -v -keystore key.jks
+===============================================
+
+===============================================
+key file making need following below information 
+
+first and last name: belwork
+name of your organizational : belwork
+name of your organizational unit: belwork
+name of your City : belwork
+State or Province : brussels
+State or country : brussels
+two-letter country code : be
+password : belwork123
+
+
+==================================================
+
+flutter version : 3.41.6
