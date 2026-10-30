@@ -92,7 +92,10 @@ class TaskContainer extends StatelessWidget {
         isCompleted = index < completedStepCount;
       }
 
-      return TimelineStepModel(title: standardStepTitles[index], isCompleted: isCompleted);
+      return TimelineStepModel(
+        title: standardStepTitles[index],
+        isCompleted: isCompleted,
+      );
     });
   }
 
@@ -103,11 +106,19 @@ class TaskContainer extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppColors.instance.containerBackground, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: AppColors.instance.containerBackground,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText(text: activeLabel, fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.instance.primary),
+          AppText(
+            text: activeLabel,
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: AppColors.instance.primary,
+          ),
           const Gap(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,25 +128,51 @@ class TaskContainer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText(text: taskTitle, fontSize: 24, fontWeight: FontWeight.w600, color: AppColors.instance.textColor),
+                    AppText(
+                      text: taskTitle,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.instance.textColor,
+                    ),
                     const Gap(height: 4),
-                    AppText(text: contractorName, fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.instance.gray4B),
+                    AppText(
+                      text: contractorName,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.instance.gray4B,
+                    ),
                   ],
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  AppText(text: price.toStringAsFixed(2), fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.instance.textColor),
+                  AppText(
+                    text: price.toStringAsFixed(2),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.instance.textColor,
+                  ),
                   const Gap(height: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFF9E6),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.instance.yellow, width: 1),
+                      border: Border.all(
+                        color: AppColors.instance.yellow,
+                        width: 1,
+                      ),
                     ),
-                    child: AppText(text: status, fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.instance.textColor),
+                    child: AppText(
+                      text: status,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.instance.textColor,
+                    ),
                   ),
                 ],
               ),
@@ -148,7 +185,11 @@ class TaskContainer extends StatelessWidget {
             final step = entry.value;
             final isLast = index == activeSteps.length - 1;
 
-            return TimelineStepItem(title: step.title, isCompleted: step.isCompleted, isLast: isLast);
+            return TimelineStepItem(
+              title: step.title,
+              isCompleted: step.isCompleted,
+              isLast: isLast,
+            );
           }),
 
           if (buttonTitle != null && buttonTitle!.isNotEmpty) ...[

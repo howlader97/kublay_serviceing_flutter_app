@@ -13,7 +13,10 @@ class CompleteAssignment extends StatelessWidget {
   Widget build(BuildContext context) {
     final filtered = jobs.where((item) {
       final s = (item.status ?? '').toUpperCase();
-      return s == 'FINISHED' || s == 'COMPLETED' || s == 'COMPLETE' || s.contains('COMPLETE');
+      return s == 'FINISHED' ||
+          s == 'COMPLETED' ||
+          s == 'COMPLETE' ||
+          s.contains('COMPLETE');
     }).toList();
 
     if (filtered.isEmpty) {
@@ -35,10 +38,7 @@ class CompleteAssignment extends StatelessWidget {
       itemCount: filtered.length,
       itemBuilder: (context, index) {
         final item = filtered[index];
-        return TaskContainer.fromJobItem(
-          item: item,
-          onTap: () {},
-        );
+        return TaskContainer.fromJobItem(item: item, onTap: () {});
       },
     );
   }

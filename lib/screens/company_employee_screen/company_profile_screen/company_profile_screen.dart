@@ -111,7 +111,11 @@ class _CompanyProfileScreenState extends ConsumerState<CompanyProfileScreen> {
                         titleColor: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        onTap: () {},
+                        onTap: () {
+                          AppRoutes.instance.pushNamed(
+                            AppRoutesKey.instance.customerDeleteAccountScreen,
+                          );
+                        },
                       ),
                       const Gap(height: 20),
                     ],

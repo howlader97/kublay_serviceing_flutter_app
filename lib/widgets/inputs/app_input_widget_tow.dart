@@ -115,8 +115,8 @@ class _AppInputWidgetTwoState extends ConsumerState<AppInputWidgetTwo> {
       onTap: widget.onTap,
       readOnly: widget.readOnly,
       controller: widget.controller,
-      minLines: widget.minLines,
-      maxLines: widget.maxLines,
+      minLines: widget.isPassWord ? 1 : widget.minLines,
+      maxLines: widget.isPassWord ? 1 : widget.maxLines,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
       validator:

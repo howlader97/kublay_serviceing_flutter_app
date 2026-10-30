@@ -33,6 +33,52 @@ class CustomerActivityNotifier
       state = AsyncValue.error(e, st);
     }
   }
+
+  Future<bool> completeJob(String jobId) async {
+    try {
+      final updatedItem = await _repository.completeCustomerJob(jobId);
+      if (updatedItem != null) {
+        state.whenData((currentList) {
+          final newList = currentList.map((item) {
+            if (item.id == jobId) {
+              if (updatedItem.user == null && item.user != null) {
+                return CustomerJobItem(
+                  id: updatedItem.id,
+                  userId: updatedItem.userId,
+                  professionalId: updatedItem.professionalId,
+                  categoryId: updatedItem.categoryId,
+                  title: updatedItem.title,
+                  description: updatedItem.description,
+                  constructionYears: updatedItem.constructionYears,
+                  region: updatedItem.region,
+                  homeAsset: updatedItem.homeAsset,
+                  status: updatedItem.status,
+                  recurrenceType: updatedItem.recurrenceType,
+                  urgency: updatedItem.urgency,
+                  wishRepairDate: updatedItem.wishRepairDate,
+                  budgetFee: updatedItem.budgetFee,
+                  address: updatedItem.address,
+                  latitude: updatedItem.latitude,
+                  longitude: updatedItem.longitude,
+                  images: updatedItem.images,
+                  createdAt: updatedItem.createdAt,
+                  updatedAt: updatedItem.updatedAt,
+                  user: item.user,
+                );
+              }
+              return updatedItem;
+            }
+            return item;
+          }).toList();
+          state = AsyncValue.data(newList);
+        });
+        return true;
+      }
+    } catch (e) {
+      errorLog('CustomerActivityNotifier.completeJob', e);
+    }
+    return false;
+  }
 }
 
 final customerActivityProvider = StateNotifierProvider<

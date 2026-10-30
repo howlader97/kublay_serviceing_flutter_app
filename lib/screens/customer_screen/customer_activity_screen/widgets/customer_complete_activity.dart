@@ -18,7 +18,7 @@ class CustomerCompleteActivity extends ConsumerWidget {
       data: (allJobs) {
         final completeJobs = allJobs.where((item) {
           final statusUpper = (item.status ?? '').toUpperCase();
-          return statusUpper.contains('COMPLETE');
+          return statusUpper == 'FINISHED' || statusUpper.contains('COMPLETE');
         }).toList();
 
         if (completeJobs.isEmpty) {
@@ -50,14 +50,13 @@ class CustomerCompleteActivity extends ConsumerWidget {
               taskTitle: item.title ?? item.homeAsset ?? 'Task',
               contractorName: contractor,
               price: priceVal,
-              status: 'Complete',
+              status: 'Finished',
               stepStatuses: const [true, true, true, true, true],
               primaryButtonTitle: "View Invoice",
               secondaryButtonTitle: null,
               onPrimaryTap: () {
                 AppRoutes.instance.pushNamed(
-                  AppRoutesKey.instance.customerEvidenceScreen,
-                  extra: item.id,
+                  AppRoutesKey.instance.customerInvoiceScreen,
                 );
               },
               onSecondaryTap: () {},

@@ -95,7 +95,7 @@ class ApiServices {
       final isSuccess = statusCode != null
           ? response.statusCode == statusCode
           : ((response.statusCode ?? 0) >= statusCodeStart &&
-              (response.statusCode ?? 0) <= statusCodeEnd);
+                (response.statusCode ?? 0) <= statusCodeEnd);
       if (isSuccess) {
         return response.data;
       } else {
@@ -143,7 +143,7 @@ class ApiServices {
       final isSuccess = statusCode != null
           ? response.statusCode == statusCode
           : ((response.statusCode ?? 0) >= statusCodeStart &&
-              (response.statusCode ?? 0) <= statusCodeEnd);
+                (response.statusCode ?? 0) <= statusCodeEnd);
       if (isSuccess) {
         return response.data;
       } else {
@@ -183,7 +183,7 @@ class ApiServices {
       final isSuccess = statusCode != null
           ? response.statusCode == statusCode
           : ((response.statusCode ?? 0) >= statusCodeStart &&
-              (response.statusCode ?? 0) <= statusCodeEnd);
+                (response.statusCode ?? 0) <= statusCodeEnd);
       if (isSuccess) {
         return response.data;
       } else {
@@ -238,7 +238,7 @@ class ApiServices {
       final isSuccess = statusCode != null
           ? response.statusCode == statusCode
           : ((response.statusCode ?? 0) >= statusCodeStart &&
-              (response.statusCode ?? 0) <= statusCodeEnd);
+                (response.statusCode ?? 0) <= statusCodeEnd);
 
       if (isSuccess) {
         return response.data;
@@ -292,7 +292,7 @@ class ApiServices {
       final isSuccess = statusCode != null
           ? response.statusCode == statusCode
           : ((response.statusCode ?? 0) >= statusCodeStart &&
-              (response.statusCode ?? 0) <= statusCodeEnd);
+                (response.statusCode ?? 0) <= statusCodeEnd);
 
       if (isSuccess) {
         return response.data;

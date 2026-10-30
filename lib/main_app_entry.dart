@@ -103,15 +103,12 @@ class _MainAppState extends ConsumerState<MainApp> {
 
       builder: (context, child) {
         ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-          return Overlay(
-            key: appOverlayKey,
-            initialEntries: [OverlayEntry(builder: (context) => ErrorScreen())],
-          );
+          return const Material(child: ErrorScreen());
         };
 
         return Overlay(
           key: appOverlayKey,
-          initialEntries: [OverlayEntry(builder: (context) => child ?? SizedBox())],
+          initialEntries: [OverlayEntry(builder: (context) => child ?? const SizedBox())],
         );
       },
     );

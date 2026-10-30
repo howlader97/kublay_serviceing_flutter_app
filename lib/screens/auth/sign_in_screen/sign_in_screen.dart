@@ -1,4 +1,5 @@
 
+import 'dart:io';
 import 'package:belwork/screens/auth/sign_in_screen/provider/remember_provider.dart';
 import 'package:belwork/screens/auth/sign_in_screen/provider/sign_in_provider.dart';
 import 'package:belwork/screens/auth/sign_in_screen/widgets/sign_in_header.dart';
@@ -51,7 +52,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   ),
                 ),
                 SignInHeader(),
-                Gap(height: 5),
+
+                if(Platform.isIOS)...[
+                  Gap(height: 5),
+                ]else...[
+              const  SizedBox(height: 55,)
+                ],
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.instance.containerBackground,
@@ -64,12 +70,19 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 18.0),
                     child: Column(
                       children: [
-                        const SizedBox(height: 8,),
+
+                        if(Platform.isIOS)...[
+                          const SizedBox(height: 8,),
+                        ]else...[
+                          const  SizedBox(height: 30,)
+                        ],
                         AppText(text: "To register as a Craftsman/Business, please login in by email",fontSize: 16,fontWeight: FontWeight.w500,color: AppColors.instance.primary,maxLines: 2,textAlign: TextAlign.center,),
                         AppInputWidgetTwo(
                           title: "E-mail",
                           controller: _emailController,
                           hintText: "Enter email address",
+                          textInputAction: TextInputAction.next,
+                          maxLines: 1,
                           validator: (String? value) {
                             if (value?.isEmpty ?? true) {
                               return "Enter email";
@@ -80,11 +93,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             AppAssertsIconsPath.instance.mailPassword,
                             scale: 3,
                           ),
-                          // suffixIcon: Image.asset(
-                          //   AppAssertsIconsPath.instance.fingerPrintIcon,
-                          //   color: AppColors.instance.primary,
-                          //   scale: 3,
-                          // ),
                         ),
                         AppInputWidgetTwo(
                           controller: _passwordController,
@@ -232,34 +240,35 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             );
                           },
                         ),
-                        Gap(height: 10),
-                        Consumer(
-                          builder: (context, ref, child) {
-                            final appleSignInState = ref.watch(appleSignInProvider);
-                            return GoogleButton(
-                              isLoading: appleSignInState.isLoading,
-                              onTap: () async {
-                                final isSuccess = await ref
-                                    .read(appleSignInProvider.notifier)
-                                    .signInWithApple();
+                        if (Platform.isIOS) ...[
+                          const Gap(height: 10),
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final appleSignInState = ref.watch(appleSignInProvider);
+                              return GoogleButton(
+                                isLoading: appleSignInState.isLoading,
+                                onTap: () async {
+                                  final isSuccess = await ref
+                                      .read(appleSignInProvider.notifier)
+                                      .signInWithApple();
 
-                                if (isSuccess) {
-                                  AppSnackBar.instance.success("Login successful!");
-                                  await ref
-                                      .read(userRoleNotifierProvider.notifier)
-                                      .loadRole();
+                                  if (isSuccess) {
+                                    AppSnackBar.instance.success("Login successful!");
+                                    await ref
+                                        .read(userRoleNotifierProvider.notifier)
+                                        .loadRole();
 
-                                  AppRoutes.instance.go(
-                                    AppRoutesKey.instance.appNavigationScreen,
-                                  );
-                                }
-                              },
-                              text: 'Continue with Apple',
-                              icon: AppAssertsIconsPath.instance.appleIcon,
-                            );
-                          },
-                        ),
-
+                                    AppRoutes.instance.go(
+                                      AppRoutesKey.instance.appNavigationScreen,
+                                    );
+                                  }
+                                },
+                                text: 'Continue with Apple',
+                                icon: AppAssertsIconsPath.instance.appleIcon,
+                              );
+                            },
+                          ),
+                        ],
                         SizedBox(height: 50),
                       ],
                     ),

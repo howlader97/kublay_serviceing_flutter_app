@@ -40,6 +40,10 @@ class ChatListNotifier extends StateNotifier<ChatListState> {
   }
 
   Future<void> _init() async {
+    final token = await StorageServices.instance.getToken();
+    if (token.trim().isEmpty) {
+      return;
+    }
     final userProfileAsync = _ref.read(userProfileProvider);
     _currentUserId = userProfileAsync.asData?.value?.id;
     if (_currentUserId == null || _currentUserId!.isEmpty) {
@@ -51,6 +55,11 @@ class ChatListNotifier extends StateNotifier<ChatListState> {
   }
 
   Future<void> fetchChatList() async {
+    final token = await StorageServices.instance.getToken();
+    if (token.trim().isEmpty) {
+      state = state.copyWith(chatList: [], isLoading: false);
+      return;
+    }
     state = state.copyWith(isLoading: state.chatList.isEmpty);
     try {
       if (_currentUserId == null || _currentUserId!.isEmpty) {

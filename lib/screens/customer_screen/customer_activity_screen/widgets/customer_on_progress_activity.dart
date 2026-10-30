@@ -8,18 +8,33 @@ import 'package:belwork/screens/customer_screen/customer_evidence_screen/provide
 import 'package:belwork/widgets/texts/app_text.dart';
 import 'customer_activity_card.dart';
 
-class CustomerInProgressActivity extends ConsumerWidget {
+class CustomerInProgressActivity extends ConsumerStatefulWidget {
   const CustomerInProgressActivity({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CustomerInProgressActivity> createState() =>
+      _CustomerInProgressActivityState();
+}
+
+class _CustomerInProgressActivityState
+    extends ConsumerState<CustomerInProgressActivity> {
+  final Set<String> _loadingJobIds = {};
+  final Set<String> _recentlyCompletedIds = {};
+
+  @override
+  Widget build(BuildContext context) {
     final jobsAsync = ref.watch(customerActivityProvider);
 
     return jobsAsync.when(
       data: (allJobs) {
         final onProgressJobs = allJobs.where((item) {
+          if (item.id != null && _recentlyCompletedIds.contains(item.id)) {
+            return true;
+          }
           final statusUpper = (item.status ?? '').toUpperCase();
-          return !statusUpper.contains('COMPLETE') && statusUpper != 'PENDING';
+          return !statusUpper.contains('COMPLETE') &&
+              statusUpper != 'FINISHED' &&
+              statusUpper != 'PENDING';
         }).toList();
 
         if (onProgressJobs.isEmpty) {
@@ -41,34 +56,71 @@ class CustomerInProgressActivity extends ConsumerWidget {
           itemCount: onProgressJobs.length,
           itemBuilder: (context, index) {
             final item = onProgressJobs[index];
+            final statusUpper = (item.status ?? '').toUpperCase();
+            final isFinished = statusUpper == 'FINISHED' ||
+                statusUpper.contains('COMPLETE') ||
+                (item.id != null && _recentlyCompletedIds.contains(item.id));
             final priceVal = double.tryParse(item.budgetFee ?? '') ?? 0.0;
             final contractor = item.user?.name != null
                 ? "Contractor: ${item.user!.name}"
                 : "Contractor: De Smet Roofing & Co";
 
+            final isJobLoading =
+                item.id != null && _loadingJobIds.contains(item.id);
+
             return Consumer(
               builder: (context, ref, child) {
-                final evidenceAsync =
-                    ref.watch(customerEvidenceProvider(item.id ?? ''));
-                final evidences = evidenceAsync.asData?.value ?? [];
-                final hasEvidence = evidences.isNotEmpty;
-                final stepStatuses = [true, true, hasEvidence, hasEvidence, false];
+                List<bool> stepStatuses;
+                if (isFinished) {
+                  stepStatuses = const [true, true, true, true, true];
+                } else {
+                  final evidenceAsync =
+                      ref.watch(customerEvidenceProvider(item.id ?? ''));
+                  final evidences = evidenceAsync.asData?.value ?? [];
+                  final hasEvidence = evidences.isNotEmpty;
+                  stepStatuses = [true, true, hasEvidence, hasEvidence, false];
+                }
 
                 return CustomerActivityCard(
                   activeLabel: "Active assignment",
                   taskTitle: item.title ?? item.homeAsset ?? 'Task',
                   contractorName: contractor,
                   price: priceVal,
-                  status: 'InProcess',
+                  status: isFinished ? 'Finished' : 'InProcess',
                   stepStatuses: stepStatuses,
-                  primaryButtonTitle: "Validate",
-                  secondaryButtonTitle: "See The Evidence",
-                  onPrimaryTap: () {},
+                  primaryButtonTitle: isFinished ? "View Invoice" : "Validate",
+                  secondaryButtonTitle: isFinished ? null : "See The Evidence",
+                  isPrimaryLoading: isJobLoading,
+                  onPrimaryTap: () async {
+                    if (isFinished) {
+                      AppRoutes.instance.pushNamed(
+                        AppRoutesKey.instance.customerInvoiceScreen,
+                      );
+                    } else if (item.id != null) {
+                      setState(() {
+                        _loadingJobIds.add(item.id!);
+                        _recentlyCompletedIds.add(item.id!);
+                      });
+                      final success = await ref
+                          .read(customerActivityProvider.notifier)
+                          .completeJob(item.id!);
+                      if (mounted) {
+                        setState(() {
+                          _loadingJobIds.remove(item.id!);
+                          if (!success) {
+                            _recentlyCompletedIds.remove(item.id!);
+                          }
+                        });
+                      }
+                    }
+                  },
                   onSecondaryTap: () {
-                    AppRoutes.instance.pushNamed(
-                      AppRoutesKey.instance.customerEvidenceScreen,
-                      extra: item.id,
-                    );
+                    if (!isFinished) {
+                      AppRoutes.instance.pushNamed(
+                        AppRoutesKey.instance.customerEvidenceScreen,
+                        extra: item.id,
+                      );
+                    }
                   },
                 );
               },

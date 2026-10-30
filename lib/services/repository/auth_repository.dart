@@ -484,7 +484,7 @@ class AuthRepository {
   Future<bool> authResendOTP({required String email}) async {
     try {
       var response = await apiServices.postServices(
-        url: api.userResendOtp,
+        url: api.sendOtp,
         body: {"email": email},
       );
       if (response != null) {
@@ -733,12 +733,13 @@ class AuthRepository {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final resData = response.data is Map
             ? (response.data["data"] is Map
-                ? response.data["data"]
-                : response.data)
+                  ? response.data["data"]
+                  : response.data)
             : null;
 
         if (resData != null && resData is Map) {
-          final accessToken = resData["accessToken"] ??
+          final accessToken =
+              resData["accessToken"] ??
               resData["access_token"] ??
               resData["token"];
           if (accessToken != null && accessToken is String) {

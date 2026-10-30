@@ -37,6 +37,10 @@ class ChatSocketService {
       _isConnecting = true;
 
       final token = await StorageServices.instance.getToken();
+      if (token.trim().isEmpty) {
+        _isConnecting = false;
+        return;
+      }
       _currentUserId = await StorageServices.instance.getUserId();
 
       appLog("ChatSocket: Connecting to ${AppApiUrl.socket} with userId: $_currentUserId");

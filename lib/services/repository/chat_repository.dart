@@ -207,7 +207,7 @@ class ChatRepository {
   }
 
   /// Create payment checkout session via POST /user/create-payment-checkout
-  Future<String?> createPaymentCheckout({
+  Future<PaymentCheckoutResult> createPaymentCheckout({
     required String jobId,
     required String professionalId,
     required dynamic totalHoursToComplete,
@@ -236,6 +236,19 @@ class ChatRepository {
       );
 
       if (response != null && response is Map) {
+        // Check if backend indicates payments are disabled
+        final paymentsEnabled = response['paymentsEnabled'] != false &&
+            (response['data'] is! Map ||
+                response['data']['paymentsEnabled'] != false);
+
+        if (!paymentsEnabled) {
+          return PaymentCheckoutResult(
+            isSuccess: true,
+            paymentsEnabled: false,
+            message: response['message']?.toString(),
+          );
+        }
+
         final checkoutUrl = response['url']?.toString() ??
             response['checkoutUrl']?.toString() ??
             response['sessionUrl']?.toString() ??
@@ -257,13 +270,56 @@ class ChatRepository {
                 : null);
 
         if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
-          return checkoutUrl;
+          return PaymentCheckoutResult(
+            isSuccess: true,
+            paymentsEnabled: true,
+            checkoutUrl: checkoutUrl,
+            message: response['message']?.toString(),
+          );
         }
+
+        return PaymentCheckoutResult(
+          isSuccess: false,
+          paymentsEnabled: true,
+          message: response['message']?.toString(),
+        );
       }
-      return null;
+      return PaymentCheckoutResult(
+        isSuccess: false,
+        paymentsEnabled: false,
+        message: 'No response from server',
+      );
     } catch (e) {
       errorLog('ChatRepository.createPaymentCheckout', e);
-      return null;
+      final errStr = e.toString().toLowerCase();
+      if (errStr.contains('403') ||
+          errStr.contains('turned off') ||
+          errStr.contains('no payment is required')) {
+        return PaymentCheckoutResult(
+          isSuccess: true,
+          paymentsEnabled: false,
+          message: 'Payments are turned off',
+        );
+      }
+      return PaymentCheckoutResult(
+        isSuccess: false,
+        paymentsEnabled: true,
+        message: e.toString(),
+      );
     }
   }
+}
+
+class PaymentCheckoutResult {
+  final bool isSuccess;
+  final bool paymentsEnabled;
+  final String? checkoutUrl;
+  final String? message;
+
+  PaymentCheckoutResult({
+    required this.isSuccess,
+    required this.paymentsEnabled,
+    this.checkoutUrl,
+    this.message,
+  });
 }

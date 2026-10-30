@@ -15,8 +15,7 @@ class OnProgressingAssignment extends StatelessWidget {
   Widget build(BuildContext context) {
     final filtered = jobs.where((item) {
       final s = (item.status ?? '').toUpperCase();
-      return s == 'IN_PROGRESS' ||
-          s == 'INPROGRESS';
+      return s == 'IN_PROGRESS' || s == 'INPROGRESS';
     }).toList();
 
     if (filtered.isEmpty) {

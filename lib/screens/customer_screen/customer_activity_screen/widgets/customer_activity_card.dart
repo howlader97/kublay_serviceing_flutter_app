@@ -17,6 +17,7 @@ class CustomerActivityCard extends StatelessWidget {
   final String? secondaryButtonTitle;
   final VoidCallback? onPrimaryTap;
   final VoidCallback? onSecondaryTap;
+  final bool isPrimaryLoading;
 
   static const List<String> standardCustomerSteps = [
     "Quotation Approved & Signed",
@@ -38,6 +39,7 @@ class CustomerActivityCard extends StatelessWidget {
     this.secondaryButtonTitle,
     this.onPrimaryTap,
     this.onSecondaryTap,
+    this.isPrimaryLoading = false,
   });
 
   String _formatPrice(double val) {
@@ -130,6 +132,7 @@ class CustomerActivityCard extends StatelessWidget {
             const Gap(height: 16),
             AppButton(
               onTap: onPrimaryTap,
+              isLoading: isPrimaryLoading,
               title: primaryButtonTitle!,
               backgroundColor: AppColors.instance.primary,
               titleColor: AppColors.instance.white,

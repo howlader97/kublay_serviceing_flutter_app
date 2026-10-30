@@ -46,7 +46,6 @@ class AppApiUrl {
   String authDeleteAccount = "/authDeleteAccount";
   String user = "/auth/register";
   String changePassword = "/changePassword";
-  String userResendOtp = "/auth/resend-email";
   String sendOtp = "/auth/send-otp";
   String authOtpVerify = "/auth/verify-opt";
   String updatePassword = "/auth/update-password";
@@ -96,5 +95,7 @@ class AppApiUrl {
       "/professional/all-task-evidence-by-user/$jobId";
   String postJobFeedback(String jobId) => "/user/jobs/$jobId/feedback";
   String postJobRevision(String jobId) => "/user/job-revision/$jobId";
+  String completeJob(String jobId) => "/user/jobs/$jobId/complete";
+  String deleteProfile = "/user/delete-profile";
 }
 

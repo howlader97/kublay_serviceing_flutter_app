@@ -30,8 +30,7 @@ Future<void> main() async {
       systemNavigationBarDividerColor: Colors.transparent,
     ),
   );
-  ////////////// network
-  ////// HttpOverrides.global = MyHttpOverrides(); //// use when i work local with http
+
 
   runApp(const MainAppEntry());
 }

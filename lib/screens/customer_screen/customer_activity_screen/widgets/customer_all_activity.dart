@@ -8,11 +8,19 @@ import 'package:belwork/screens/customer_screen/customer_evidence_screen/provide
 import 'package:belwork/widgets/texts/app_text.dart';
 import 'customer_activity_card.dart';
 
-class CustomerAllActivity extends ConsumerWidget {
+class CustomerAllActivity extends ConsumerStatefulWidget {
   const CustomerAllActivity({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CustomerAllActivity> createState() =>
+      _CustomerAllActivityState();
+}
+
+class _CustomerAllActivityState extends ConsumerState<CustomerAllActivity> {
+  final Set<String> _loadingJobIds = {};
+
+  @override
+  Widget build(BuildContext context) {
     final jobsAsync = ref.watch(customerActivityProvider);
 
     return jobsAsync.when(
@@ -37,7 +45,8 @@ class CustomerAllActivity extends ConsumerWidget {
           itemBuilder: (context, index) {
             final item = jobs[index];
             final statusUpper = (item.status ?? '').toUpperCase();
-            final isComplete = statusUpper.contains('COMPLETE');
+            final isFinished =
+                statusUpper == 'FINISHED' || statusUpper.contains('COMPLETE');
             final isPending = statusUpper == 'PENDING';
             final priceVal = double.tryParse(item.budgetFee ?? '') ?? 0.0;
             final contractor = item.user?.name != null
@@ -48,8 +57,8 @@ class CustomerAllActivity extends ConsumerWidget {
             String? primaryBtn = "Validate";
             String? secondaryBtn = "See The Evidence";
 
-            if (isComplete) {
-              displayStatus = 'Complete';
+            if (isFinished) {
+              displayStatus = 'Finished';
               primaryBtn = "View Invoice";
               secondaryBtn = null;
             } else if (isPending) {
@@ -58,11 +67,14 @@ class CustomerAllActivity extends ConsumerWidget {
               secondaryBtn = null;
             }
 
+            final isJobLoading =
+                item.id != null && _loadingJobIds.contains(item.id);
+
             return Consumer(
               builder: (context, ref, child) {
                 List<bool> stepStatuses = const [true, true, false, false, false];
 
-                if (isComplete) {
+                if (isFinished) {
                   stepStatuses = const [true, true, true, true, true];
                 } else if (isPending) {
                   stepStatuses = const [false, false, false, false, false];
@@ -83,7 +95,28 @@ class CustomerAllActivity extends ConsumerWidget {
                   stepStatuses: stepStatuses,
                   primaryButtonTitle: primaryBtn,
                   secondaryButtonTitle: secondaryBtn,
-                  onPrimaryTap: () {},
+                  isPrimaryLoading: isJobLoading,
+                  onPrimaryTap: () async {
+                    if (isFinished) {
+                      AppRoutes.instance.pushNamed(
+                        AppRoutesKey.instance.customerInvoiceScreen,
+                      );
+                    } else if (!isPending) {
+                      if (item.id != null) {
+                        setState(() {
+                          _loadingJobIds.add(item.id!);
+                        });
+                        await ref
+                            .read(customerActivityProvider.notifier)
+                            .completeJob(item.id!);
+                        if (mounted) {
+                          setState(() {
+                            _loadingJobIds.remove(item.id!);
+                          });
+                        }
+                      }
+                    }
+                  },
                   onSecondaryTap: () {
                     if (secondaryBtn != null) {
                       AppRoutes.instance.pushNamed(

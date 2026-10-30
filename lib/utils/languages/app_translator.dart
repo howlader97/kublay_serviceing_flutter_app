@@ -12,7 +12,7 @@ class AppTranslator {
       'back': 'Retour',
       'electric': 'Électrique',
       'electrice': 'Électrique',
-      'Subcontracting and business' : 'Sous-traitance et activités commerciales',
+      'Subcontracting and business': 'Sous-traitance et activités commerciales',
       'electrical': 'Électrique',
       'electrics': 'Électrique',
       'search by name, service category':
@@ -30,7 +30,7 @@ class AppTranslator {
       'on progress': 'En cours',
       'in-progress': 'En cours',
       'in process': 'En cours',
-      'Craftsman' : 'Artisan',
+      'Craftsman': 'Artisan',
 
       // AppString & Core UI
       'next': 'Suivant',
@@ -128,7 +128,8 @@ class AppTranslator {
       'terms & condition': 'Conditions générales',
       'your terms & condition': 'Vos conditions générales',
       'about us': 'À propos de nous',
-      'Search city, street or area' : 'Rechercher une ville, une rue ou un quartier',
+      'Search city, street or area':
+          'Rechercher une ville, une rue ou un quartier',
 
       // Empty states & status
       'no categories available': 'Aucune catégorie disponible',
@@ -499,16 +500,12 @@ class AppTranslator {
       'on progress': 'In uitvoering',
       'in-progress': 'In uitvoering',
       'in process': 'In uitvoering',
-      'Craftsman' : 'Vakman',
-      'Subcontracting and business' : 'Uitbesteding en het bedrijfsleven',
+      'Craftsman': 'Vakman',
+      'Subcontracting and business': 'Uitbesteding en het bedrijfsleven',
       'available weekdays': 'Beschikbaar op weekdagen',
       'available weekends': 'Beschikbaar in het weekend',
       'available_weekdays': 'Beschikbaar op weekdagen',
       'available_weekends': 'Beschikbaar in het weekend',
-      'available full week': 'De hele week beschikbaar',
-      'available_full_week': 'De hele week beschikbaar',
-      'full week': 'Hele week',
-      'full_week': 'Hele week',
 
       // AppString & Core UI
       'next': 'Volgende',
@@ -961,7 +958,8 @@ class AppTranslator {
       final normalized = text.trim().toLowerCase();
       final withSpaces = normalized.replaceAll('_', ' ');
 
-      final override = _manualOverrides[targetLang]?[normalized] ??
+      final override =
+          _manualOverrides[targetLang]?[normalized] ??
           _manualOverrides[targetLang]?[withSpaces] ??
           _manualOverrides[targetLang]?[text.trim()];
       if (override != null) return override;
@@ -983,7 +981,8 @@ class AppTranslator {
       final normalized = text.trim().toLowerCase();
       final withSpaces = normalized.replaceAll('_', ' ');
 
-      final override = _manualOverrides[targetLang]?[normalized] ??
+      final override =
+          _manualOverrides[targetLang]?[normalized] ??
           _manualOverrides[targetLang]?[withSpaces] ??
           _manualOverrides[targetLang]?[text.trim()];
       if (override != null) return override;

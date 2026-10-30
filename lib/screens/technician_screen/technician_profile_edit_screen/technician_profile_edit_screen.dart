@@ -41,7 +41,6 @@ class _TechnicianProfileEditScreenState
   String? _selectedAvatarPath;
   String _currentAvatarUrl = '';
   bool _isInitialized = false;
-  bool _isLookingUpAddress = false;
 
   @override
   void initState() {
@@ -143,7 +142,7 @@ class _TechnicianProfileEditScreenState
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Gap(width: 4,),
+          Gap(width: 4),
           Checkbox(
             value: isSelected,
             activeColor: AppColors.instance.primary,
@@ -189,9 +188,7 @@ class _TechnicianProfileEditScreenState
       return;
     }
 
-    setState(() {
-      _isLookingUpAddress = true;
-    });
+    setState(() {});
 
     final address = await LocationService.instance.reverseGeocode(
       latitude: lat,
@@ -200,7 +197,6 @@ class _TechnicianProfileEditScreenState
 
     if (mounted) {
       setState(() {
-        _isLookingUpAddress = false;
         if (address != null && address.isNotEmpty) {
           _workingAddressController.text = address;
           AppSnackBar.instance.success("Address resolved: $address");

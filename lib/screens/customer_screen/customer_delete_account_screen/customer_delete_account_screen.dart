@@ -28,14 +28,20 @@ class CustomerDeleteAccountScreen extends StatelessWidget {
                     },
                   ),
                   Gap(width: 12),
-                  AppText(text: "Delete account", fontWeight: FontWeight.w600, fontSize: 24, color: AppColors.instance.bodyText),
+                  AppText(
+                    text: "Delete account",
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                    color: AppColors.instance.bodyText,
+                  ),
                 ],
               ),
               Gap(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18.0),
                 child: AppText(
-                  text: "Deleting your account will permanently remove all public and private information associated with your profile.",
+                  text:
+                      "Deleting your account will permanently remove all public and private information associated with your profile.",
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -43,7 +49,9 @@ class CustomerDeleteAccountScreen extends StatelessWidget {
               Gap(height: 30),
               AppButton(
                 onTap: () {
-                  AppRoutes.instance.pushNamed(AppRoutesKey.instance.customerDeleteAccountForm);
+                  AppRoutes.instance.pushNamed(
+                    AppRoutesKey.instance.customerDeleteAccountForm,
+                  );
                 },
                 title: "Continue to Delete Account",
                 height: 48,

@@ -313,8 +313,8 @@ class _ProposalMessageCardState extends State<ProposalMessageCard> {
     });
 
     try {
-      // ─── 1. CREATE PAYMENT CHECKOUT (STRIPE) ──────────────────────────────
-      final checkoutUrl = await ChatRepository.instance.createPaymentCheckout(
+      // ─── 1. CHECK PAYMENT CHECKOUT (STRIPE) ──────────────────────────────
+      final checkoutResult = await ChatRepository.instance.createPaymentCheckout(
         jobId: jobId,
         professionalId: professionalId,
         totalHoursToComplete: totalHours,
@@ -323,65 +323,68 @@ class _ProposalMessageCardState extends State<ProposalMessageCard> {
         vatPercentage: vatPercentage,
       );
 
-      if (checkoutUrl == null || checkoutUrl.isEmpty) {
-        if (!mounted) return;
-        setState(() {
-          _isAccepting = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.error_outline, color: Colors.white, size: 20),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text('Failed to create payment checkout. Please try again.'),
-                ),
-              ],
+
+      if (checkoutResult.paymentsEnabled) {
+        final checkoutUrl = checkoutResult.checkoutUrl;
+        if (checkoutUrl == null || checkoutUrl.isEmpty) {
+          if (!mounted) return;
+          setState(() {
+            _isAccepting = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.error_outline, color: Colors.white, size: 20),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('Failed to create payment checkout. Please try again.'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.redAccent,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-            backgroundColor: Colors.redAccent,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+          );
+          return;
+        }
+
+        final paymentSuccess = await StripePaymentWebViewScreen.show(
+          context,
+          checkoutUrl: checkoutUrl,
         );
-        return;
+
+        if (paymentSuccess != true) {
+          if (!mounted) return;
+          setState(() {
+            _isAccepting = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.white, size: 20),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('Payment was cancelled or not completed.'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.orange.shade800,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+          return;
+        }
       }
 
-      // ─── 2. OPEN STRIPE PAYMENT IN-APP WEBVIEW ───────────────────────────
-      final paymentSuccess = await StripePaymentWebViewScreen.show(
-        context,
-        checkoutUrl: checkoutUrl,
-      );
-
-      if (paymentSuccess != true) {
-        if (!mounted) return;
-        setState(() {
-          _isAccepting = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.info_outline, color: Colors.white, size: 20),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text('Payment was cancelled or not completed.'),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.orange.shade800,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-        return;
-      }
-
-      // ─── 3. ACCEPT PROPOSAL AFTER PAYMENT SUCCESS ─────────────────────────
+      // ─── 3. ACCEPT PROPOSAL (DIRECT IF PAYMENTS DISABLED, OR AFTER PAYMENT) ───
       final success = await ChatRepository.instance.updateJobProposalStatus(
         proposalId: proposalId,
         status: 'ACCEPTED',
@@ -402,12 +405,16 @@ class _ProposalMessageCardState extends State<ProposalMessageCard> {
         }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.white, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Text('Payment completed & quotation accepted successfully!'),
+                  child: Text(
+                    checkoutResult.paymentsEnabled
+                        ? 'Payment completed & quotation accepted successfully!'
+                        : 'Quotation accepted successfully!',
+                  ),
                 ),
               ],
             ),
@@ -421,12 +428,16 @@ class _ProposalMessageCardState extends State<ProposalMessageCard> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
-                Icon(Icons.error_outline, color: Colors.white, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.error_outline, color: Colors.white, size: 20),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Text('Payment finished, but failed to update status. Please try again.'),
+                  child: Text(
+                    checkoutResult.paymentsEnabled
+                        ? 'Payment finished, but failed to update status. Please try again.'
+                        : 'Failed to accept quotation. Please try again.',
+                  ),
                 ),
               ],
             ),
